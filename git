@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eu
+CWD="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+export JUSTFILE="${CWD}/Justfile"
+"${CWD}/external/vsi_common/linux/just" git ${@+"${@}"}

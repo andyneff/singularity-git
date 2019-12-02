@@ -1,46 +1,28 @@
 FROM vsiri/recipe:gosu as gosu
-FROM vsiri/recipe:tini as tini
+FROM vsiri/recipe:tini-musl as tini
+FROM vsiri/recipe:git-lfs as git-lfs
 FROM vsiri/recipe:vsi as vsi
 
 ###############################################################################
 
-FROM debian:stretch
-SHELL ["/usr/bin/env", "bash", "-euxvc"]
+FROM alpine:3.10
+
+SHELL ["/usr/bin/env", "sh", "-euxvc"]
 
 # Install any runtime dependencies
-RUN apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      tzdata; \
-    rm -r /var/lib/apt/lists/*
-
-# Install any additional packages
-RUN apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      # Example of a package
-      qbs-examples; \
-    rm -rf /var/lib/apt/lists/*
-
-# Another typical example of installing a package
-# RUN build_deps="wget ca-certificates"; \
-#     apt-get update; \
-#     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ${build_deps}; \
-#     wget -q https://www.vsi-ri.com/bin/deviceQuery; \
-#     DEBIAN_FRONTEND=noninteractive apt-get purge -y --autoremove ${build_deps}; \
-#     rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+      bash git less openssh tzdata
 
 COPY --from=tini /usr/local /usr/local
-
-COPY --from=gosu /usr/local/bin/gosu /usr/local/bin/gosu
+COPY --from=git-lfs /usr/local /usr/local
+RUN git lfs install
+COPY --from=gosu /usr/local /usr/local
 # Allow non-privileged to run gosu (remove this to take root away from user)
 RUN chmod u+s /usr/local/bin/gosu
 
-
 COPY --from=vsi /vsi /vsi
-ADD ["", "/src/"]
-ADD docker/git.Justfile /src/docker/
+ADD ["git.env", "/src/"]
 
-ENTRYPOINT ["/usr/local/bin/tini", "--", "/usr/bin/env", "bash", "/vsi/linux/just_entrypoint.sh"]
-# Does not require execute permissions, unlike:
-# ENTRYPOINT ["/usr/local/bin/tini", "--", "/vsi/linux/just_entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/tini", "--", "/usr/bin/env", "bash", "/vsi/linux/just_entrypoint.sh", "git"]
 
-CMD ["git-cmd"]
+CMD ["--help"]

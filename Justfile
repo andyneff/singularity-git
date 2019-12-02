@@ -25,8 +25,8 @@ function caseify()
 
       fi
       ;;
-    run_git) # Run git 1
-      Just-docker-compose run --service-ports git ${@+"${@}"}
+    git) # Run git
+      Just-docker-compose run git ${@+"${@}"}
       extra_args=$#
       ;;
 
