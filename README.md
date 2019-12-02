@@ -1,15 +1,16 @@
+A docker designed to be turned into a singularity image to add a modern git to an old machine
+
 ## Getting started
 
-``` 
+```
 source 'setup.env'
 just sync
-just run git
+just singular-compose import git
 ```
 
-## Just usage:
+## Git usage:
 
 ```
-source 'setup.env'
-${just_cmd} help
+./git --version
 ```
 
