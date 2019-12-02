@@ -1,0 +1,34 @@
+version: "2.4"
+
+services:
+  git:
+    build:
+      context: .
+      dockerfile: docker/git.Dockerfile
+    # prevent different users from clobbering each others images
+    image: ${GIT_DOCKER_REPO}:git_${GIT_USERNAME}
+    environment:
+      # Variables for just_entrypoint_functions
+      - DOCKER_UID=${GIT_UID}
+      - DOCKER_GIDS=${GIT_GIDS}
+      - DOCKER_GROUP_NAMES=${GIT_GROUP_NAMES}
+      - DOCKER_USERNAME=user
+
+#       - DOCKER_HOME=${GIT_HOME}
+
+      - DISPLAY
+      - JUSTFILE=/src/docker/git.Justfile
+      - JUST_SETTINGS=/src/git.env
+      - TZ
+#     runtime: nvidia  # Uncomment for nvidia gpu support
+#     cap_add:
+#       - SYS_PTRACE # Useful for gdb
+    volumes:
+      - type: ${GIT_SOURCE_DIR_TYPE}
+        source: ${GIT_SOURCE_DIR}
+        target: ${GIT_SOURCE_DIR_DOCKER}
+#       - type: volume
+#         source: home-volume
+#         target: ${GIT_HOME} # home-volume should be overridable
+# volumes:
+#   home-volume:

@@ -1,0 +1,4 @@
+*
+!docker
+!external/vsi_common
+!git.env
