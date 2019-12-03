@@ -6,6 +6,7 @@ source "${VSI_COMMON_DIR}/linux/just_env" "$(dirname "${BASH_SOURCE[0]}")"/'git.
 source "${VSI_COMMON_DIR}/linux/docker_functions.bsh"
 source "${VSI_COMMON_DIR}/linux/just_docker_functions.bsh"
 source "${VSI_COMMON_DIR}/linux/just_git_functions.bsh"
+source "${VSI_COMMON_DIR}/linux/just_singularity_functions.bsh"
 
 cd "${GIT_CWD}"
 
@@ -22,12 +23,24 @@ function caseify()
       else
         justify build recipes-auto "${GIT_CWD}/docker"/*.Dockerfile
         Docker-compose build
-
       fi
       ;;
-    git) # Run git
+    docker_git) # Run git in docker
       Just-docker-compose run git ${@+"${@}"}
       extra_args=$#
+      ;;
+
+    import) # Build singularity images for git
+      justify build
+      justify singular-compose import git "${GIT_DOCKER_REPO}:git_${GIT_USERNAME}"
+      ;;
+    git) # Run git in singularity
+      SINGULARITY_ADD_TMP_DIR=0 justify singular-compose run git ${@+"${@}"}
+      extra_args=$#
+      ;;
+
+    shell) # Run shell in git image
+      SINGULARITY_ADD_TMP_DIR=0 justify singular-compose shell git
       ;;
 
     sync) # Synchronize the many aspects of the project when new code changes \
