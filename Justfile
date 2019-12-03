@@ -21,7 +21,7 @@ function caseify()
         Docker-compose "${just_arg}" ${@+"${@}"}
         extra_args=$#
       else
-        justify build recipes-auto "${GIT_CWD}/docker"/*.Dockerfile
+        justify build recipes-auto "${GIT_CWD}/Dockerfile"
         Docker-compose build
       fi
       ;;

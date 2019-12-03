@@ -3,13 +3,15 @@ FROM vsiri/recipe:vsi as vsi
 
 ###############################################################################
 
-FROM alpine:3.10
+FROM debian:buster-slim
 
-SHELL ["/usr/bin/env", "sh", "-euxvc"]
+SHELL ["/usr/bin/env", "bash", "-euxvc"]
 
 # # Install any runtime dependencies
-RUN apk add --no-cache \
-      bash git less openssh tzdata
+RUN apt-get update; \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+      ca-certificates git less openssh-client tzdata; \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=git-lfs /usr/local /usr/local
 RUN git lfs install

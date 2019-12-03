@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -eu
 CWD="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
-
-"${CWD}/external/vsi_common/linux/just" git ${@+"${@}"}
+source "${CWD}/setup.env"
+just git ${@+"${@}"}

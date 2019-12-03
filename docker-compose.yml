@@ -4,7 +4,7 @@ services:
   git:
     build:
       context: .
-      dockerfile: docker/git.Dockerfile
+      dockerfile: Dockerfile
     # prevent different users from clobbering each others images
     image: ${GIT_DOCKER_REPO}:git_${GIT_USERNAME}
     working_dir: ${GIT_CWD_DIR_DOCKER}
