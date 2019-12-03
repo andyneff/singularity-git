@@ -28,4 +28,5 @@ This can be accomplished by simply editing your `local.env` (on the docker host)
 ```bash
 DOCKER2SINGULARITY_VERSION=v2.6
 GIT_CWD_DIR_DOCKER=/code
+GIT_SSH_SOCK_DOCKER=/ssh_sock
 ```

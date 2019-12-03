@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # prevent different users from clobbering each others images
     image: ${GIT_DOCKER_REPO}:git_${GIT_USERNAME}
     working_dir: ${GIT_CWD_DIR_DOCKER}
     environment:
@@ -17,9 +16,6 @@ services:
       - JUST_SETTINGS=/src/git.env
       - TZ
     volumes:
-      # - type: ${GIT_SOURCE_DIR_TYPE}
-      #   source: ${GIT_SOURCE_DIR}
-      #   target: ${GIT_SOURCE_DIR_DOCKER}
       - type: ${GIT_CWD_DIR_TYPE}
         source: ${GIT_CWD_DIR}
         target: ${GIT_CWD_DIR_DOCKER}
