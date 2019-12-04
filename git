@@ -2,4 +2,4 @@
 set -eu
 CWD="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 source "${CWD}/setup.env"
-just git ${@+"${@}"}
+JUSTFILE="${CWD}/Justfile" just git ${@+"${@}"}
