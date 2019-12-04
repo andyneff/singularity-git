@@ -19,6 +19,22 @@ just git --version
 ./git --version
 ```
 
+Its best to add an alias in your bashrc file
+
+```bash
+alias "git={singularity-git_repo_dir}/git"
+```
+
+## ssh-agent
+
+An ssh-agent container has also been added. By default, your `SSH_AUTH_SOCK` will automatically be mounted in and used by the container, however if you aren't on a GUI, the ssh-agent isn't handled for you, and can be easy to lose track of. Next thing you know, you have dozens of `ssh-agent` processed running
+
+```bash
+just ssh-agent
+```
+
+Will start a singularity instance running and as long as `SSH_AUTH_SOCK` is unset, the git container will automatically connect to it.
+
 ## Non-overlay fs support
 
 For older operating systems without overlay fs, mount points must be made static.
