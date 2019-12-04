@@ -21,7 +21,7 @@ function caseify()
         Docker-compose "${just_arg}" ${@+"${@}"}
         extra_args=$#
       else
-        justify build recipes-auto "${GIT_CWD}/Dockerfile"
+        justify build recipes-auto "${GIT_CWD}/docker/"*.Dockerfile
         Docker-compose build
       fi
       ;;
@@ -33,14 +33,29 @@ function caseify()
     import) # Build singularity images for git
       justify build
       justify singular-compose import git "${GIT_DOCKER_REPO}:git_${GIT_USERNAME}"
-      ;;
-    git) # Run git in singularity
-      SINGULARITY_ADD_TMP_DIR=0 justify singular-compose run git ${@+"${@}"}
-      extra_args=$#
+      justify singular-compose import ssh_agent "${GIT_DOCKER_REPO}:ssh-agent_${GIT_USERNAME}"
       ;;
 
+    git) # Run git in singularity. Cannot be chained with other just commands, \
+         # even with a chain-breaker
+      SINGULARITY_EXEC=1 SINGULARITY_ADD_TMP_DIR=0 justify singular-compose run git ${@+"${@}"}
+      extra_args=$#
+      ;;
     shell) # Run shell in git image
       SINGULARITY_ADD_TMP_DIR=0 justify singular-compose shell git
+      ;;
+
+    ssh-agent_stop) # Stop ssh-agent
+      Singularity instance stop "${GIT_SSH_AGENT_INSTANCE}" || :
+      ;;
+
+    ssh-agent) # Start ssh-agent in the background. Cannot be chained with other \
+               # just commands, even with a chain-breaker
+      SINGULARITY_EXEC=1 SINGULARITY_ADD_TMP_DIR=0 justify singular-compose instance start ssh_agent "${GIT_SSH_AGENT_INSTANCE}"
+      ;;
+
+    ssh-add) # Run ssh-add
+      SSH_AUTH_SOCK="${GIT_SSH_AGENT_ADDRESS}" exec ssh-add ${@+"${@}"}
       ;;
 
     sync) # Synchronize the many aspects of the project when new code changes \
@@ -51,9 +66,9 @@ function caseify()
         touch "${GIT_CWD}/.just_synced"
       fi
       # Add any extra steps run when syncing everytime
-      Docker-compose down
+      justify ssh-agent stop
       justify git_submodule-update # For those users who don't remember!
-      justify build
+      justify import
       ;;
 
     *)

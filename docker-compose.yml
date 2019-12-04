@@ -4,7 +4,7 @@ services:
   git:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/git.Dockerfile
     image: ${GIT_DOCKER_REPO}:git_${GIT_USERNAME}
     working_dir: ${GIT_CWD_DIR_DOCKER}
     environment:
@@ -16,9 +16,26 @@ services:
       - JUST_SETTINGS=/src/git.env
       - TZ
     volumes:
-      - type: ${GIT_CWD_DIR_TYPE}
-        source: ${GIT_CWD_DIR}
-        target: ${GIT_CWD_DIR_DOCKER}
+      - type: ${GIT_REPO_DIR_TYPE}
+        source: ${GIT_REPO_DIR}
+        target: ${GIT_REPO_DIR_DOCKER}
+      - type: bind
+        source: ${GIT_CWD}/external/vsi_common
+        target: /vsi
+  ssh-agent:
+    build:
+      context: .
+      dockerfile: docker/ssh-agent.Dockerfile
+    image: ${GIT_DOCKER_REPO}:ssh-agent_${GIT_USERNAME}
+    environment:
+      # Variables for just_entrypoint_functions
+      - DOCKER_UID=${GIT_UID}
+      - DOCKER_GIDS=${GIT_GIDS}
+      - DOCKER_GROUP_NAMES=${GIT_GROUP_NAMES}
+      - DOCKER_USERNAME=user
+      - JUST_SETTINGS=/src/git.env
+      - TZ
+    volumes:
       - type: bind
         source: ${GIT_CWD}/external/vsi_common
         target: /vsi

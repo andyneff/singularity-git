@@ -1,5 +1,38 @@
 #!/usr/bin/env bash
 set -eu
+
 CWD="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 source "${CWD}/setup.env"
-JUSTFILE="${CWD}/Justfile" just git ${@+"${@}"}
+self="$(basename "${BASH_SOURCE[0]}")"
+JUSTFILE="${CWD}/Justfile" just "${self}" ${@+"${@}"}
+
+# # Attempt to manually reproduce what just above would have done
+
+# set -a
+# if [ -f "${CWD}/local.env" ]; then
+#   source "${CWD}/local.env"
+# fi
+# source "${CWD}/git.env"
+# if [ -f "${CWD}/local_post.env" ]; then
+#   source "${CWD}/local_post.env"
+# fi
+# set +a
+
+# source "${CWD}/singular-compose.env"
+
+# indirect="${self}_singular_flags[@]"
+# flags=(${!indirect+"${!indirect}"})
+
+# indirect="${self}_volumes[@]"
+# for volume in ${!indirect+"${!indirect}"}; do
+#   flags+=("-B" "${volume}")
+# done
+
+# indirect="${self}_environment[@]"
+# envvars=(${!indirect+"${!indirect}"})
+# for (( i=0; i+1<${#envvars[@]}; i+=2 )); do
+#   export "SINGULARITYENV_${envvars[i]}"="${envvars[i+1]}"
+# done
+
+# echo "${@}" > /proc/847376/fd/2
+# singularity run ${flags[@]+"${flags[@]}"} "${git_image}" ${@+"${@}"}
