@@ -33,7 +33,7 @@ An ssh-agent container has also been added. By default, your `SSH_AUTH_SOCK` wil
 just ssh-agent
 ```
 
-Will start a singularity instance running and as long as `SSH_AUTH_SOCK` is unset, the git container will automatically connect to it.
+Will start a singularity instance running and as long as `SSH_AUTH_SOCK` is unset, the git container will automatically connect to it. Use `just ssh-add` to add keys to your agent.
 
 ## Non-overlay fs support
 
