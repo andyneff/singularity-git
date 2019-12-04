@@ -3,7 +3,7 @@ FROM vsiri/recipe:vsi as vsi
 
 ###############################################################################
 
-FROM debian:buster-slim
+FROM debian:stretch-slim
 
 SHELL ["/usr/bin/env", "bash", "-euxvc"]
 
