@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-source "${VSI_COMMON_DIR}/linux/just_env" "$(dirname "${BASH_SOURCE[0]}")"/'git.env'
+source "${VSI_COMMON_DIR}/linux/just_files/just_env" "$(dirname "${BASH_SOURCE[0]}")"/'git.env'
 
 # Plugins
-source "${VSI_COMMON_DIR}/linux/docker_functions.bsh"
-source "${VSI_COMMON_DIR}/linux/just_docker_functions.bsh"
-source "${VSI_COMMON_DIR}/linux/just_git_functions.bsh"
-source "${VSI_COMMON_DIR}/linux/just_singularity_functions.bsh"
+source "${VSI_COMMON_DIR}/linux/just_files/docker_functions.bsh"
+source "${VSI_COMMON_DIR}/linux/just_files/just_docker_functions.bsh"
+source "${VSI_COMMON_DIR}/linux/just_files/just_git_functions.bsh"
+source "${VSI_COMMON_DIR}/linux/just_files/just_singularity_functions.bsh"
 
 cd "${GIT_CWD}"
 
